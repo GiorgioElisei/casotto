@@ -1,0 +1,114 @@
+package it.unicam.ids.casotto;
+
+import it.unicam.ids.casotto.cliente.Cliente;
+import it.unicam.ids.casotto.cliente.ClienteRepo;
+import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloni;
+import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloniRepo;
+import it.unicam.ids.casotto.posizione.Posizione;
+import it.unicam.ids.casotto.posizione.PosizioneRepo;
+import it.unicam.ids.casotto.prenotazione.Prenotazione;
+import it.unicam.ids.casotto.prenotazione.PrenotazioneRepo;
+import it.unicam.ids.casotto.stagione.Stagione;
+import it.unicam.ids.casotto.stagione.StagioneRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/cliente")
+public class ClienteController {
+    @Autowired
+    private ClienteRepo clienteRepo;
+    @Autowired
+    private GruppoOmbrelloniRepo ombrelloneRepo;
+    @Autowired
+    private PosizioneRepo posizioneRepo;
+    @Autowired
+    private StagioneRepo stagioneRepo;
+    @Autowired
+    private PrenotazioneRepo prenotazioneRepo;
+
+    @GetMapping(path = "/ombrelloni")
+    public List<GruppoOmbrelloni> gruppiOmbrelloni(@CookieValue Long id) {
+        try {
+            clienteRepo.findById(id).get();
+            List<GruppoOmbrelloni> ombrelloni = new ArrayList<>();
+            ombrelloneRepo.findAll().forEach(ombrelloni::add);
+            return ombrelloni;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @GetMapping(path = "/mieiOmbrelloni")
+    public List<GruppoOmbrelloni> mieiOmbrelloni(@CookieValue Long id) {
+        try {
+            Cliente cliente = clienteRepo.findById(id).get();
+            return cliente.getPrenotazioni().stream().map(p -> p.getGruppoOmbrelloni()).collect(Collectors.toList());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @PutMapping(path = "/prenotaOmbrellone")
+    public String prenotaOmbrellone(@CookieValue Long id, @RequestParam Long idOmbrellone, @RequestParam Long idStagione) {
+        try {
+            Cliente cliente = clienteRepo.findById(id).get();
+            GruppoOmbrelloni ombrellone = ombrelloneRepo.findById(idOmbrellone).orElse(null);
+            Stagione stagione = stagioneRepo.findById(idStagione).orElse(null);
+            Prenotazione prenotazione = ombrellone.prenotaOmbrellone(stagione, cliente);
+            prenotazioneRepo.save(prenotazione);
+            clienteRepo.save(cliente);
+            ombrelloneRepo.save(ombrellone);
+            return "OK";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    @DeleteMapping(path = "/eliminaPrenotazione")
+    public String eliminaPrenotazione(@CookieValue Long id, @RequestParam Long idPrenotazione) {
+        try {
+            Cliente cliente = clienteRepo.findById(id).get();
+            Prenotazione prenotazione = prenotazioneRepo.findById(idPrenotazione).orElse(null);
+            GruppoOmbrelloni ombrellone = ombrelloneRepo.findById(prenotazione.getGruppoOmbrelloni().getId()).orElse(null);
+            ombrellone.removePrenotazione(prenotazione);
+            cliente.removePrenotazione(prenotazione);
+            prenotazioneRepo.deleteById(idPrenotazione);
+            clienteRepo.save(cliente);
+            ombrelloneRepo.save(ombrellone);
+            return "OK";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    @GetMapping(path = "/posizioni")
+    public List<Posizione> posizioni(@CookieValue Long id) {
+        try {
+            clienteRepo.findById(id).get();
+            List<Posizione> posizioni = new ArrayList<>();
+            posizioneRepo.findAll().forEach(posizioni::add);
+            return posizioni;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @GetMapping(path = "/stagioni")
+    public List<Stagione> stagioni(@CookieValue Long id) {
+        try {
+            clienteRepo.findById(id).get();
+            List<Stagione> stagioni = new ArrayList<>();
+            stagioneRepo.findAll().forEach(stagioni::add);
+            return stagioni;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+}

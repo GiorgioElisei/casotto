@@ -1,0 +1,29 @@
+.container-centered-image {
+    height:100%;
+    width:100%;
+    justify-content:center;
+    align-items:flex-start;
+    display:flex;
+    flex-wrap:wrap;
+    background: url('https://blog.produceshop.it/wp-content/uploads/2021/04/ombrelloni-930x620.jpg') 0 0/100% 100% no-repeat;
+    padding: 2rem;
+}
+
+.container-centered-image2 {
+    height:100%;
+    width:100%;
+    justify-content:center;
+    align-items:flex-start;
+    display:flex;
+    flex-wrap:wrap;
+    background: url('https://grancanaria.gocity.it/media/mare_e_spiaggia.jpg') 0 0/100% 100% no-repeat;
+    padding: 2rem;
+}
+
+.item-centered {
+    width:400px;
+    border-radius:2%;
+    padding:2rem;
+    background-color:white;
+    text-align:center;
+}

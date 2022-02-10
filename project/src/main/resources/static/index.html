@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>casotto</title>
+    <script src="https://unpkg.com/vue@2/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/vue-router@3/dist/vue-router.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+    <link rel="stylesheet" href="index.css" />
+    <script type="module">
+        import { menuController } from 'https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/index.esm.js';
+        window.menuController = menuController;
+    </script>
+</head>
+<body>
+    <div id='app'>
+        <ion-app>
+            <ion-tabs>
+                <ion-tab>
+                    <ion-nav>
+                        <router-view 
+                            @autentica="autentica" 
+                            @esci="esci" 
+                            @caricamento="caricamento" 
+                            @notifica="notifica"
+                            @aggiorna="aggiorna" 
+                            :utente="utente"
+                        ></router-view>
+                    </ion-nav>
+                </ion-tab>
+                <ion-tab-bar v-if="utente" slot="top">
+
+                    <ion-tab-button v-if="utente.tipo=='admin'" @click="$router.replace({path: '/stagioni/'})">
+                        <ion-label>stagioni</ion-label>
+                    </ion-tab-button>
+                    <ion-tab-button v-if="utente.tipo=='admin'" @click="$router.replace({path: '/posizioni/'})">
+                        <ion-label>posizioni</ion-label>
+                    </ion-tab-button>
+                    <ion-tab-button v-if="utente.tipo=='admin'" @click="$router.replace({path: '/ombrelloni/'})">
+                        <ion-label>ombrelloni</ion-label>
+                    </ion-tab-button>
+
+                    <ion-tab-button v-if="utente.tipo=='cliente'" @click="$router.replace({path: '/ombrelloni/'})">
+                        <ion-label>ombrelloni</ion-label>
+                    </ion-tab-button>
+
+                    <ion-tab-button @click="$router.replace({path: '/utente'})">
+                        <ion-label>{{utente.username}}</ion-label>
+                    </ion-tab-button>
+                </ion-tab-bar>
+            </ion-tabs>
+        </ion-app>
+    </div>
+    <script src="router.js"></script>
+</body>
+
+</html>
