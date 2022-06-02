@@ -1,5 +1,7 @@
 package it.unicam.ids.casotto;
 
+import it.unicam.ids.casotto.attivita.Attivita;
+import it.unicam.ids.casotto.attivita.AttivitaRepo;
 import it.unicam.ids.casotto.cliente.Cliente;
 import it.unicam.ids.casotto.cliente.ClienteRepo;
 import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloni;
@@ -31,6 +33,8 @@ public class ClienteController {
     private StagioneRepo stagioneRepo;
     @Autowired
     private PrenotazioneRepo prenotazioneRepo;
+    @Autowired
+    private AttivitaRepo attivitaRepo;
 
     @GetMapping(path = "/ombrelloni")
     public List<GruppoOmbrelloni> gruppiOmbrelloni(@CookieValue Long id) {
@@ -108,6 +112,44 @@ public class ClienteController {
             return stagioni;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    @GetMapping(path = "/attivita")
+    public List<Attivita> attivita(@CookieValue Long id) {
+        try {
+            clienteRepo.findById(id).get();
+            List<Attivita> attivita = new ArrayList<>();
+            attivitaRepo.findAll().forEach(attivita::add);
+            return attivita;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @PutMapping(path = "/partecipaAttivita")
+    public String partecipaAttivita(@CookieValue Long id, @RequestParam Long idAttivita) {
+        try {
+            Cliente cliente = clienteRepo.findById(id).get();
+            Attivita attivita = attivitaRepo.findById(idAttivita).get();
+            attivita.addPartecipante(cliente);
+            attivitaRepo.save(attivita);
+            return "OK";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    @DeleteMapping(path = "/eliminaPartecipaAttivita")
+    public String eliminaPartecipaAttivita(@CookieValue Long id, @RequestParam Long idAttivita) {
+        try {
+            Cliente cliente = clienteRepo.findById(id).get();
+            Attivita attivita = attivitaRepo.findById(idAttivita).get();
+            attivita.eliminaPartecipante(cliente);
+            attivitaRepo.save(attivita);
+            return "OK";
+        } catch (Exception e) {
+            return e.getMessage();
         }
     }
 

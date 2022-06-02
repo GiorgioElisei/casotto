@@ -101,15 +101,17 @@ export default Vue.component("ombrelloni", {
     },
     async deleteOmbrellone(id) {
       this.$emit("caricamento", true);
-      const res = await (
-        await fetch(
-          "/api/" + this.utente.tipo + "/eliminaOmbrellone?idOmbrellone=" + id,
-          {
-            method: "DELETE",
-          }
-        )
-      ).text();
-      this.$emit("notifica", res);
+      if(confirm("Sei sicuro di voler eliminare il gruppo di ombrelloni "+id)) {
+        const res = await (
+          await fetch(
+            "/api/" + this.utente.tipo + "/eliminaOmbrellone?idOmbrellone=" + id,
+            {
+              method: "DELETE",
+            }
+          )
+        ).text();
+        this.$emit("notifica", res);
+      }
       this.$emit("caricamento", false);
       await this.aggiorna();
     },
@@ -133,16 +135,18 @@ export default Vue.component("ombrelloni", {
     },
     async sprenota(ombrelloniId, stagioneId) {
       this.$emit("caricamento", true);
-      const res = await (
-        await fetch(
-          "api/" +
-            this.utente.tipo +
-            "/eliminaPrenotazione?idPrenotazione=" +
-            this.prenotazione(ombrelloniId, stagioneId).id,
-          { method: "DELETE" }
-        )
-      ).text();
-      this.$emit("notifica", res);
+      if(confirm("Sei sicuro di voler eliminare la prenotazione?")) {
+        const res = await (
+          await fetch(
+            "api/" +
+              this.utente.tipo +
+              "/eliminaPrenotazione?idPrenotazione=" +
+              this.prenotazione(ombrelloniId, stagioneId).id,
+            { method: "DELETE" }
+          )
+        ).text();
+        this.$emit("notifica", res);
+      }
       this.$emit("caricamento", false);
       await this.aggiorna();
       await this.$emit("aggiorna");

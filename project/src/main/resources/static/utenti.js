@@ -49,15 +49,17 @@ export default Vue.component("utenti", {
     },
     async deleteUtente(id) {
       this.$emit("caricamento", true);
-      const res = await (
-        await fetch(
-          "/api/" + this.utente.tipo + "/eliminaUtente?idUtente=" + id,
-          {
-            method: "DELETE",
-          }
-        )
-      ).text();
-      this.$emit("notifica", res);
+      if (confirm("Sei sicuro di voler eliminare l'utente?")) {
+        const res = await (
+          await fetch(
+            "/api/" + this.utente.tipo + "/eliminaUtente?idUtente=" + id,
+            {
+              method: "DELETE",
+            }
+          )
+        ).text();
+        this.$emit("notifica", res);
+      }
       this.$emit("caricamento", false);
       await this.aggiorna();
     },

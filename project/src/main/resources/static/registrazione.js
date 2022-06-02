@@ -36,7 +36,7 @@ export default Vue.component("registrazione", {
         this.$emit("notifica", "campo mancante");
       } else if (this.password === this.ripetipassword) {
         this.$emit("caricamento", true);
-        let status = (
+         const res = await (
           await fetch(
             "api/registra?username=" +
               this.username +
@@ -44,9 +44,11 @@ export default Vue.component("registrazione", {
               this.password,
             { method: "POST" }
           )
-        ).status;
-        if (status >= 200 && status < 300) this.$emit("notifica", "successo");
-        else this.$emit("notifica", "errore");
+        ).text();
+        if (res == "OK") {
+          this.$emit("notifica", "successo");
+          this.$router.go(-1);
+        } else this.$emit("notifica", "[ERRORE]: "+res);
         this.$emit("caricamento", false);
       } else {
         this.$emit("notifica", "password differenti");

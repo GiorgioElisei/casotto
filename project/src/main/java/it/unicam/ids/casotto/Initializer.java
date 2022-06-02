@@ -1,5 +1,7 @@
 package it.unicam.ids.casotto;
 
+import it.unicam.ids.casotto.addetto.Addetto;
+import it.unicam.ids.casotto.addetto.AddettoRepo;
 import it.unicam.ids.casotto.admin.Admin;
 import it.unicam.ids.casotto.admin.AdminRepo;
 import it.unicam.ids.casotto.cliente.Cliente;
@@ -8,6 +10,8 @@ import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloni;
 import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloniRepo;
 import it.unicam.ids.casotto.posizione.Posizione;
 import it.unicam.ids.casotto.posizione.PosizioneRepo;
+import it.unicam.ids.casotto.prenotazione.Prenotazione;
+import it.unicam.ids.casotto.prenotazione.PrenotazioneRepo;
 import it.unicam.ids.casotto.stagione.Stagione;
 import it.unicam.ids.casotto.stagione.StagioneRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +28,22 @@ public class Initializer implements CommandLineRunner {
     @Autowired
     private ClienteRepo clienteRepo;
     @Autowired
+    private AddettoRepo addettoRepo;
+    @Autowired
     private PosizioneRepo posizioneRepo;
     @Autowired
     private StagioneRepo stagioneRepo;
     @Autowired
     private GruppoOmbrelloniRepo gruppoOmbrelloniRepo;
+    @Autowired
+    private PrenotazioneRepo prenotazioneRepo;
 
     @Override
     public void run(String... args) throws Exception {
         this.adminRepo.save(new Admin("admin", "admin"));
 
-        this.clienteRepo.save(new Cliente("cliente", "cliente"));
+        Cliente cliente = new Cliente("cliente", "cliente");
+        clienteRepo.save(cliente);
 
         List<Stagione> stagioni = new ArrayList<>();
         stagioni.add(new Stagione("MAGGIO", 2.0, 1));
@@ -54,6 +63,16 @@ public class Initializer implements CommandLineRunner {
         this.gruppoOmbrelloniRepo.save(go);
         for (Stagione s : stagioniSaved)
             go.addStagione(s);
-        this.gruppoOmbrelloniRepo.save(go);
+        //this.gruppoOmbrelloniRepo.save(go);
+
+        Prenotazione prenotazione = new Prenotazione(stagioniSaved.get(0), cliente, go);
+        prenotazioneRepo.save(prenotazione);
+        gruppoOmbrelloniRepo.save(go);
+
+        Addetto addetto = new Addetto("addetto", "addetto");
+        addetto.addPosizione(posizione);
+        this.addettoRepo.save(addetto);
+
+
     }
 }

@@ -37,7 +37,7 @@ export default Vue.component("crea-stagione", {
         this.$emit("notifica", "campo mancante");
       } else {
         this.$emit("caricamento", true);
-        const status = (
+        const res = await (
           await fetch(
             "api/" +
               this.utente.tipo +
@@ -49,11 +49,11 @@ export default Vue.component("crea-stagione", {
               this.prezzo,
             { method: "POST" }
           )
-        ).status;
-        if (status >= 200 && status < 300) {
+        ).text();
+        if (res == "OK") {
           this.$emit("notifica", "successo");
           this.$router.go(-1);
-        } else this.$emit("notifica", "errore durante la creazione");
+        } else this.$emit("notifica", "[ERRORE]: "+res);
         this.$emit("caricamento", false);
       }
     },

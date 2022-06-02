@@ -50,9 +50,15 @@
                     <ion-tab-button v-if="utente.tipo=='addetto'" @click="$router.replace({path: '/ombrelloni/'})">
                         <ion-label>ombrelloni</ion-label>
                     </ion-tab-button>
+                    <ion-tab-button v-if="utente.tipo=='addetto'" @click="$router.replace({path: '/attivita/'})">
+                        <ion-label>attivita</ion-label>
+                    </ion-tab-button>
 
                     <ion-tab-button v-if="utente.tipo=='cliente'" @click="$router.replace({path: '/ombrelloni/'})">
                         <ion-label>ombrelloni</ion-label>
+                    </ion-tab-button>
+                    <ion-tab-button v-if="utente.tipo=='cliente'" @click="$router.replace({path: '/attivita/'})">
+                        <ion-label>attivita</ion-label>
                     </ion-tab-button>
 
                     <ion-tab-button @click="$router.replace({path: '/utente'})">

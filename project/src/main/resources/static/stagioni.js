@@ -38,15 +38,17 @@ export default Vue.component("stagioni", {
     },
     async deleteStagione(id) {
       this.$emit("caricamento", true);
-      const res = await (
-        await fetch(
-          "/api/" + this.utente.tipo + "/eliminaStagione?idStagione=" + id,
-          {
-            method: "DELETE",
-          }
-        )
-      ).text();
-      this.$emit("notifica", res);
+      if(confirm("Sei sicuro di voler eliminare la stagione?")) {
+        const res = await (
+          await fetch(
+            "/api/" + this.utente.tipo + "/eliminaStagione?idStagione=" + id,
+            {
+              method: "DELETE",
+            }
+          )
+        ).text();
+        this.$emit("notifica", res);
+      }
       this.$emit("caricamento", false);
       await this.aggiorna();
     },
