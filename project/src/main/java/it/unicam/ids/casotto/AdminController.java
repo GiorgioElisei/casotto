@@ -1,5 +1,7 @@
 package it.unicam.ids.casotto;
 
+import it.unicam.ids.casotto.addetto.Addetto;
+import it.unicam.ids.casotto.addetto.AddettoRepo;
 import it.unicam.ids.casotto.admin.AdminRepo;
 import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloni;
 import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloniRepo;
@@ -7,6 +9,8 @@ import it.unicam.ids.casotto.posizione.Posizione;
 import it.unicam.ids.casotto.posizione.PosizioneRepo;
 import it.unicam.ids.casotto.stagione.Stagione;
 import it.unicam.ids.casotto.stagione.StagioneRepo;
+import it.unicam.ids.casotto.user.User;
+import it.unicam.ids.casotto.user.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +29,10 @@ public class AdminController {
     private PosizioneRepo posizioneRepo;
     @Autowired
     private StagioneRepo stagioneRepo;
+    @Autowired
+    private AddettoRepo addettoRepo;
+    @Autowired
+    private UserRepo userRepo;
 
     @GetMapping(path = "/ombrelloni")
     public List<GruppoOmbrelloni> ombrelloni(@CookieValue Long id) {
@@ -159,6 +167,66 @@ public class AdminController {
             return "OK";
         } catch (Exception e) {
             return e.getMessage();
+        }
+    }
+
+
+    @DeleteMapping(path = "/eliminaUtente")
+    public String eliminaUtente(@CookieValue Long id, @RequestParam Long idUtente) {
+        try {
+            adminRepo.findById(id).get();
+            userRepo.deleteById(idUtente);
+            return "OK";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    @PostMapping("/registraUtente")
+    public Long registraUtente(@CookieValue Long id, @RequestParam String username, @RequestParam String password, @RequestParam String tipo) {
+        try {
+            for (User u : userRepo.findAll())
+                if (u.getUsername().equals(username))
+                    throw new Exception("Utente gia esistente");
+            User user = null;
+            switch (tipo) {
+                case "addetto":
+                    Addetto addetto = new Addetto(username, password);
+                    addettoRepo.save(addetto);
+                    user = addetto;
+                    break;
+            }
+            return user.getId();
+        } catch (Exception e) {
+            return -1L;
+        }
+    }
+
+    @PutMapping("/addPosizioneToAddetto")
+    public String addPosizioneToAddetto(@CookieValue Long id, @RequestParam Long idAddetto, @RequestParam Long idPosizione) {
+        try {
+            Posizione posizione = posizioneRepo.findById(idPosizione).orElse(null);
+            Addetto a = addettoRepo.findById(idAddetto).orElse(null);
+            a.addPosizione(posizione);
+            addettoRepo.save(a);
+            return "OK";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    @GetMapping(path = "/utenti")
+    public List<User> utenti(@CookieValue Long id) {
+        try {
+            adminRepo.findById(id).get();
+            List<User> users = new ArrayList<>();
+            userRepo.findAll().forEach(u -> {
+                if(u.getId() != id)
+                    users.add(u);
+            });
+            return users;
+        } catch (Exception e) {
+            return null;
         }
     }
 

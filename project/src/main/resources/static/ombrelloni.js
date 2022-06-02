@@ -18,7 +18,9 @@ export default Vue.component("ombrelloni", {
       <ion-card-content>
         <ion-card-subtitle>stagioni</ion-card-subtitle>
         <ion-list>
-          <ion-item v-for="stagione in gruppo.stagioni">
+          <ion-item v-for="stagione in gruppo.stagioni" 
+          :button="(utente.tipo=='admin' || utente.tipo=='addetto') && gruppo.prenotazioni.filter((g) => g.stagione.id == stagione.id).length > 0" 
+          @click="clickStagione(gruppo, stagione)">
             <ion-label>
                 {{stagione.nome}} - {{stagione.prezzo + gruppo.posizione.prezzo}}€
             </ion-label>
@@ -53,10 +55,19 @@ export default Vue.component("ombrelloni", {
           <ion-icon name="trash"></ion-icon>
       </ion-button>
     </ion-card>
+    <ion-modal v-if="utente.tipo=='admin' || utente.tipo=='addetto'" :is-open="prenotazioni.length>0">
+      <ion-content><ion-list>
+      <ion-button color="danger" expand="full" @click="close()">close</ion-button>
+          <ion-item v-for="prenotazione in prenotazioni">
+            <ion-label>{{prenotazione.id}}</ion-label>
+          </ion-item>
+      </ion-content>
+    </ion-modal>
   </ion-content>
         `,
   data() {
     return {
+      prenotazioni: [],
       ombrelloni: [],
       prenotazioneCodice: false,
     };
@@ -135,6 +146,19 @@ export default Vue.component("ombrelloni", {
       this.$emit("caricamento", false);
       await this.aggiorna();
       await this.$emit("aggiorna");
+    },
+    clickStagione(gruppo, stagione) {
+      this.close();
+      setTimeout(
+        () =>
+          (this.prenotazioni = gruppo.prenotazioni.filter(
+            (g) => g.stagione.id == stagione.id
+          )),
+        100
+      );
+    },
+    close() {
+      this.prenotazioni = [];
     },
   },
 });

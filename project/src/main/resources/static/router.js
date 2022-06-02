@@ -20,6 +20,8 @@ const routes = [
   { path: "/crea-ombrelloni", component: () => import("./crea-ombrelloni.js") },
   { path: "/stagioni", component: () => import("./stagioni.js") },
   { path: "/crea-stagione", component: () => import("./crea-stagione.js") },
+  { path: "/utenti", component: () => import("./utenti.js") },
+  { path: "/crea-utente", component: () => import("./crea-utente.js") },
 
   {
     path: "/",

@@ -53,20 +53,6 @@ public class UtenteController {
         }
     }
 
-    @PostMapping("/registraAddetto")
-    public String registraAddetto(@RequestParam String username, @RequestParam String password) {
-        try {
-            for (Addetto a : addettoRepo.findAll())
-                if (a.getUsername().equals(username))
-                    throw new Exception();
-            Addetto a = new Addetto(username, password);
-            addettoRepo.save(a);
-            return "OK";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
     @GetMapping("/autentica")
     public User autenticaCliente(@RequestParam String username, @RequestParam String password) {
         try {

@@ -34,6 +34,9 @@
                 </ion-tab>
                 <ion-tab-bar v-if="utente" slot="top">
 
+                    <ion-tab-button v-if="utente.tipo=='admin'" @click="$router.replace({path: '/utenti/'})">
+                        <ion-label>utenti</ion-label>
+                    </ion-tab-button>
                     <ion-tab-button v-if="utente.tipo=='admin'" @click="$router.replace({path: '/stagioni/'})">
                         <ion-label>stagioni</ion-label>
                     </ion-tab-button>
@@ -41,6 +44,10 @@
                         <ion-label>posizioni</ion-label>
                     </ion-tab-button>
                     <ion-tab-button v-if="utente.tipo=='admin'" @click="$router.replace({path: '/ombrelloni/'})">
+                        <ion-label>ombrelloni</ion-label>
+                    </ion-tab-button>
+
+                    <ion-tab-button v-if="utente.tipo=='addetto'" @click="$router.replace({path: '/ombrelloni/'})">
                         <ion-label>ombrelloni</ion-label>
                     </ion-tab-button>
 

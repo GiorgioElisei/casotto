@@ -18,7 +18,6 @@ export default Vue.component("stagioni", {
           </ion-button>
         </ion-item>
       </ion-list>
-    </ion-card>
   </ion-content>
         `,
   data() {
