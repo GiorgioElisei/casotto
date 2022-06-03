@@ -24,6 +24,8 @@ const routes = [
   { path: "/crea-utente", component: () => import("./crea-utente.js") },
   { path: "/attivita", component: () => import("./attivita.js") },
   { path: "/crea-attivita", component: () => import("./crea-attivita.js") },
+  { path: "/prodotti", component: () => import("./prodotti.js") },
+  { path: "/crea-prodotto", component: () => import("./crea-prodotto.js") },
 
   {
     path: "/",

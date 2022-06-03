@@ -10,7 +10,10 @@ export default Vue.component("stagioni", {
       <ion-button expand="full" @click="$router.push('/crea-stagione')">
         crea stagione
       </ion-button>
-      <ion-list>
+      <ion-card v-if="stagioni.length == 0">
+        <ion-title>non ci sono ancora stagioni disponibili</ion-title>
+      </ion-card>
+      <ion-list v-else>
         <ion-item v-for="stagione in stagioni">
           <ion-label>{{stagione.nome}} - {{stagione.prezzo}}€</ion-label>
           <ion-button color="danger" shape="round" @click="deleteStagione(stagione.id)">

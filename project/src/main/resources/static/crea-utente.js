@@ -25,6 +25,7 @@ export default Vue.component("crea-utente", {
                     <ion-label>tipo</ion-label>
                     <ion-select @ionChange="tipo = $event.target.value" placeholder="posizione">
                     <ion-select-option value="addetto">addetto</ion-select-option>
+                    <ion-select-option value="fornitore">fornitore</ion-select-option>
                     </ion-select>
                 </ion-item>
                 <ion-item :disabled="tipo != 'addetto'">

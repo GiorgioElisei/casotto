@@ -10,6 +10,8 @@ import it.unicam.ids.casotto.posizione.Posizione;
 import it.unicam.ids.casotto.posizione.PosizioneRepo;
 import it.unicam.ids.casotto.prenotazione.Prenotazione;
 import it.unicam.ids.casotto.prenotazione.PrenotazioneRepo;
+import it.unicam.ids.casotto.prodotto.Prodotto;
+import it.unicam.ids.casotto.prodotto.ProdottoRepo;
 import it.unicam.ids.casotto.stagione.Stagione;
 import it.unicam.ids.casotto.stagione.StagioneRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,8 @@ public class ClienteController {
     private PrenotazioneRepo prenotazioneRepo;
     @Autowired
     private AttivitaRepo attivitaRepo;
+    @Autowired
+    private ProdottoRepo prodottoRepo;
 
     @GetMapping(path = "/ombrelloni")
     public List<GruppoOmbrelloni> gruppiOmbrelloni(@CookieValue Long id) {
@@ -147,6 +151,31 @@ public class ClienteController {
             Attivita attivita = attivitaRepo.findById(idAttivita).get();
             attivita.eliminaPartecipante(cliente);
             attivitaRepo.save(attivita);
+            return "OK";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    @GetMapping(path = "/prodotti")
+    public List<Prodotto> prodotti(@CookieValue Long id) {
+        try {
+            clienteRepo.findById(id).get();
+            List<Prodotto> prodotti = new ArrayList<>();
+            prodottoRepo.findAll().forEach(prodotti::add);
+            return prodotti;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @PutMapping(path = "/prenotaProdotto")
+    public String prenotaProdotto(@CookieValue Long id, @RequestParam Long idProdotto, @RequestParam Integer quantita) {
+        try {
+            Cliente cliente = clienteRepo.findById(id).get();
+            Prodotto prodotto = prodottoRepo.findById(idProdotto).get();
+            prodotto.prenotaProdotto(cliente, quantita);
+            prodottoRepo.save(prodotto);
             return "OK";
         } catch (Exception e) {
             return e.getMessage();

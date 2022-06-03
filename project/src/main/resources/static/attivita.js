@@ -10,7 +10,10 @@ export default Vue.component("attivita", {
       <ion-button v-if="utente.tipo=='addetto'" @click="$router.push('/crea-attivita')" expand="full">
         crea attivita
       </ion-button>
-    <ion-card v-for="(att, key) in attivita" :key="key">
+      <ion-card v-if="attivita.length == 0">
+        <ion-title>non ci sono ancora attivita disponibili</ion-title>
+      </ion-card>
+      <ion-card v-else v-for="(att, key) in attivita" :key="key">
       <ion-card-header>
         <ion-card-title>[ID:{{att.id}}]</ion-card-title>
         <ion-card-title>{{att.nome}} - {{att.stagione.nome}}</ion-card-title>

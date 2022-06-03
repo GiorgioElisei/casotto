@@ -10,7 +10,10 @@ export default Vue.component("ombrelloni", {
       <ion-button v-if="utente.tipo=='admin'" @click="$router.push('/crea-ombrelloni')" expand="full">
         crea ombrelloni
       </ion-button>
-    <ion-card v-for="gruppo in ombrelloni">
+      <ion-card v-if="ombrelloni.length == 0">
+        <ion-title>non ci sono ancora ombrelloni disponibili</ion-title>
+      </ion-card>
+      <ion-card v-else v-for="gruppo in ombrelloni">
       <ion-card-header>
         <ion-card-title>[ID:{{gruppo.id}}]</ion-card-title>
         <ion-card-subtitle>{{gruppo.ombrelloniTotali}} ombrelloni totali in posizione {{gruppo.posizione.nome}}</ion-card-subtitle>

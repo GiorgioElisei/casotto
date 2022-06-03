@@ -3,6 +3,8 @@ package it.unicam.ids.casotto;
 import it.unicam.ids.casotto.addetto.Addetto;
 import it.unicam.ids.casotto.addetto.AddettoRepo;
 import it.unicam.ids.casotto.admin.AdminRepo;
+import it.unicam.ids.casotto.fornitore.Fornitore;
+import it.unicam.ids.casotto.fornitore.FornitoreRepo;
 import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloni;
 import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloniRepo;
 import it.unicam.ids.casotto.posizione.Posizione;
@@ -33,6 +35,8 @@ public class AdminController {
     private AddettoRepo addettoRepo;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private FornitoreRepo fornitoreRepo;
 
     @GetMapping(path = "/ombrelloni")
     public List<GruppoOmbrelloni> ombrelloni(@CookieValue Long id) {
@@ -194,6 +198,11 @@ public class AdminController {
                     Addetto addetto = new Addetto(username, password);
                     addettoRepo.save(addetto);
                     user = addetto;
+                    break;
+                case "fornitore":
+                    Fornitore fornitore = new Fornitore(username, password);
+                    fornitoreRepo.save(fornitore);
+                    user = fornitore;
                     break;
             }
             return user.getId();

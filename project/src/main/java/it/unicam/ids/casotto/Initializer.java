@@ -4,14 +4,20 @@ import it.unicam.ids.casotto.addetto.Addetto;
 import it.unicam.ids.casotto.addetto.AddettoRepo;
 import it.unicam.ids.casotto.admin.Admin;
 import it.unicam.ids.casotto.admin.AdminRepo;
+import it.unicam.ids.casotto.attivita.Attivita;
+import it.unicam.ids.casotto.attivita.AttivitaRepo;
 import it.unicam.ids.casotto.cliente.Cliente;
 import it.unicam.ids.casotto.cliente.ClienteRepo;
+import it.unicam.ids.casotto.fornitore.Fornitore;
+import it.unicam.ids.casotto.fornitore.FornitoreRepo;
 import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloni;
 import it.unicam.ids.casotto.gruppo_ombrellone.GruppoOmbrelloniRepo;
 import it.unicam.ids.casotto.posizione.Posizione;
 import it.unicam.ids.casotto.posizione.PosizioneRepo;
 import it.unicam.ids.casotto.prenotazione.Prenotazione;
 import it.unicam.ids.casotto.prenotazione.PrenotazioneRepo;
+import it.unicam.ids.casotto.prodotto.Prodotto;
+import it.unicam.ids.casotto.prodotto.ProdottoRepo;
 import it.unicam.ids.casotto.stagione.Stagione;
 import it.unicam.ids.casotto.stagione.StagioneRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +43,18 @@ public class Initializer implements CommandLineRunner {
     private GruppoOmbrelloniRepo gruppoOmbrelloniRepo;
     @Autowired
     private PrenotazioneRepo prenotazioneRepo;
+    @Autowired
+    private FornitoreRepo fornitoreRepo;
+    @Autowired
+    private AttivitaRepo attivitaRepo;
+    @Autowired
+    private ProdottoRepo prodottoRepo;
 
     @Override
     public void run(String... args) throws Exception {
         this.adminRepo.save(new Admin("admin", "admin"));
+
+        this.fornitoreRepo.save(new Fornitore("fornitore", "fornitore"));
 
         Cliente cliente = new Cliente("cliente", "cliente");
         clienteRepo.save(cliente);
@@ -52,7 +66,7 @@ public class Initializer implements CommandLineRunner {
         stagioni.add(new Stagione("AGOSTO", 10.0, 4));
         stagioni.add(new Stagione("SETTEMBRE", 4.0, 5));
         List<Stagione> stagioniSaved = new ArrayList<>();
-        for (Stagione s: stagioni)
+        for (Stagione s : stagioni)
             stagioniSaved.add(this.stagioneRepo.save(s));
 
         Posizione posizione = this.posizioneRepo.save(new Posizione("AVANTI", "AVANTI", 5.0));
@@ -73,6 +87,11 @@ public class Initializer implements CommandLineRunner {
         addetto.addPosizione(posizione);
         this.addettoRepo.save(addetto);
 
+        attivitaRepo.save(new Attivita("Moto d'aqua", "Moto d'acqua dalle 9 alle 14",
+                10, stagioni.get(0)));
+
+        prodottoRepo.save(new Prodotto("Patatine", 4.15, 50));
+        prodottoRepo.save(new Prodotto("Tramezzino", 3.50, 30));
 
     }
 }

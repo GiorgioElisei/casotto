@@ -46,7 +46,7 @@ export default Vue.component("crea-attivita", {
     },
   methods: {
     async crea() {
-      if (this.nome == "" || this.descrizione == "" || this.numeroMassimoPartecipanti <= 0) {
+      if (this.nome == "" || this.descrizione == "" || this.numeroMassimoPartecipanti <= 0 || !this.selectedStagione) {
         this.$emit("notifica", "campo mancante");
       } else {
         this.$emit("caricamento", true);

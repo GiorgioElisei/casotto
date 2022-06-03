@@ -7,10 +7,13 @@ export default Vue.component("posizioni", {
   /*html*/
   template: `
   <ion-content>
-      <ion-button expand="full" @click="$router.push('/crea-posizione')">
-        crea posizione
-      </ion-button>
-    <ion-card v-for="posizione in posizioni">
+    <ion-button expand="full" @click="$router.push('/crea-posizione')">
+      crea posizione
+    </ion-button>
+    <ion-card v-if="posizioni.length == 0">
+      <ion-title>non ci sono ancora posizioni disponibili</ion-title>
+    </ion-card>
+    <ion-card v-else v-for="posizione in posizioni">
       <ion-card-header>
         <ion-card-title>{{posizione.nome}} - {{posizione.prezzo}}€</ion-card-title>
       </ion-card-header>

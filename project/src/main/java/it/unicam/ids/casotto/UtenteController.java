@@ -6,6 +6,7 @@ import it.unicam.ids.casotto.admin.Admin;
 import it.unicam.ids.casotto.admin.AdminRepo;
 import it.unicam.ids.casotto.cliente.Cliente;
 import it.unicam.ids.casotto.cliente.ClienteRepo;
+import it.unicam.ids.casotto.fornitore.FornitoreRepo;
 import it.unicam.ids.casotto.notifica.Notifica;
 import it.unicam.ids.casotto.notifica.NotificaRepo;
 import it.unicam.ids.casotto.stagione.Stagione;
@@ -32,6 +33,8 @@ public class UtenteController {
     private NotificaRepo notificaRepo;
     @Autowired
     private UserRepo utenteRepo;
+    @Autowired
+    private FornitoreRepo fornitoreRepo;
 
     @PostMapping("/registra")
     public String registraCliente(@RequestParam String username, @RequestParam String password) {
@@ -62,12 +65,13 @@ public class UtenteController {
     }
 
     @GetMapping("/autentica")
-    public User autenticaCliente(@RequestParam String username, @RequestParam String password) {
+    public User autentica(@RequestParam String username, @RequestParam String password) {
         try {
             List<User> users = new ArrayList<>();
             clienteRepo.findAll().forEach(users::add);
             adminRepo.findAll().forEach(users::add);
             addettoRepo.findAll().forEach(users::add);
+            fornitoreRepo.findAll().forEach(users::add);
             for (User u : users)
                 if (u.getUsername().equals(username))
                     if (u.checkPassword(password))
